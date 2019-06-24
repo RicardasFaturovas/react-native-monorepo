@@ -1,10 +1,12 @@
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native'
+import { observer } from 'mobx-react-lite';
 
 interface Props {
   exercise: string,
   repsAndWeight: string,
-  sets: string[]
+  sets: string[];
+  onSetPress: (index: number) => void;
 }
 
 const styles = StyleSheet.create({
@@ -16,7 +18,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 3,
     flexDirection: 'column',
-    padding: 10
+    padding: 10,
+    marginBottom: 10
   },
   topRow: {
     flexDirection: 'row',
@@ -48,7 +51,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export const WorkoutCard : React.FC<Props> = ({ exercise, repsAndWeight, sets }) => {
+export const WorkoutCard : React.FC<Props> = observer(({ exercise, repsAndWeight, sets, onSetPress }) => {
     const _getStylesForCircle = (set: string) => {
       const bottomRowStyles: Array<object> = [styles.circle]
       if (set === 'x' || set === '') {
@@ -67,9 +70,9 @@ export const WorkoutCard : React.FC<Props> = ({ exercise, repsAndWeight, sets })
         <View style={styles.bottomRow}>
           {sets.map((set, index) => {
             const markup = ( 
-              <View style={_getStylesForCircle(set)} key={set + index}>
+              <TouchableOpacity onPress={() => onSetPress(index)} style={_getStylesForCircle(set)} key={set + index}>
                 <Text style={[styles.whiteText, styles.circleText]}>{set}</Text>
-              </View> 
+              </TouchableOpacity> 
             )
 
             return markup;
@@ -77,4 +80,4 @@ export const WorkoutCard : React.FC<Props> = ({ exercise, repsAndWeight, sets })
         </View>
       </View>
     );
-}
+});
