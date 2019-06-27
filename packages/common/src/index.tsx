@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, StyleSheet} from 'react-native';
 import { observer } from "mobx-react-lite";
-import { Router } from './Router';
+import { Routes } from './Routes';
 
 export const App = observer(() => {
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>
-        <Router />
+        <Routes />
       </View>
     </View>
   );
