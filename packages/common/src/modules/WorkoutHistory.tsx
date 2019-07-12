@@ -1,13 +1,34 @@
 import * as React from 'react'
-import { Text, View, Button } from 'react-native';
+import { Text, View, Button, StyleSheet } from 'react-native';
 import { observer } from 'mobx-react-lite';
 import { RootStoreContext } from '../stores/RootStore';
 import { RouteComponentProps } from 'react-router';
+import { HistoryCard } from '../ui/HistoryCard';
 
 interface Props extends RouteComponentProps {}
 
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row'
+  }
+});
+
 export const WorkoutHistory: React.FC<Props> = observer(({history}) => {
   const rootStore = React.useContext(RootStoreContext);
+
+  const rows: JSX.Element[][] = [];
+
+  if (rootStore.workoutStore.history) {
+    Object.entries(rootStore.workoutStore.history).forEach(([date, value], index) => {
+      const historyCard = <HistoryCard key={date} header={date} currentExercises={value} />;
+  
+      if (index % 2 === 0) {
+        rows.push([historyCard])
+      } else {
+        rows[rows.length - 1].push(historyCard)
+      }
+    });
+  }
 
   return (
     <View>
@@ -41,6 +62,10 @@ export const WorkoutHistory: React.FC<Props> = observer(({history}) => {
           history.push('/current-workout')
         }}
        />
+
+       {rows.map((row, index) => (
+         <View style={styles.row} key={index}>{row}</View>
+       ))}
     </View>
   );
 });

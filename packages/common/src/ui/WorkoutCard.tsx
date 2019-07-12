@@ -1,6 +1,7 @@
 import * as React from 'react'
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native'
 import { observer } from 'mobx-react-lite';
+import { Card } from './Card';
 
 interface Props {
   exercise: string,
@@ -10,15 +11,7 @@ interface Props {
 }
 
 const styles = StyleSheet.create({
-  card: {
-    borderRadius: 3,
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    flexDirection: 'column',
-    padding: 10,
+  cardContainer: {
     marginBottom: 10
   },
   topRow: {
@@ -62,22 +55,29 @@ export const WorkoutCard : React.FC<Props> = observer(({ exercise, repsAndWeight
     }
 
     return (
-      <View style={styles.card}>
-        <View style={styles.topRow}>
-          <Text style={styles.topRowText}>{exercise}</Text>
-          <Text>{repsAndWeight}</Text>
-        </View>
-        <View style={styles.bottomRow}>
-          {sets.map((set, index) => {
-            const markup = ( 
-              <TouchableOpacity onPress={() => onSetPress(index)} style={_getStylesForCircle(set)} key={set + index}>
-                <Text style={[styles.whiteText, styles.circleText]}>{set}</Text>
-              </TouchableOpacity> 
-            )
+      <View style={styles.cardContainer}>
+        <Card>
+          <View style={styles.topRow}>
+            <Text style={styles.topRowText}>{exercise}</Text>
+            <Text>{repsAndWeight}</Text>
+          </View>
+          <View style={styles.bottomRow}>
+            {sets.map((set, index) => {
+              const markup = set === 'x' ? (
+                <View style={_getStylesForCircle(set)} key={set + index}>
+                  <Text style={[styles.whiteText, styles.circleText]}>{set}</Text>
+                </View> 
+              ) : 
+              ( 
+                <TouchableOpacity onPress={() => onSetPress(index)} style={_getStylesForCircle(set)} key={set + index}>
+                  <Text style={[styles.whiteText, styles.circleText]}>{set}</Text>
+                </TouchableOpacity> 
+              )
 
-            return markup;
-          })}
-        </View>
+              return markup;
+            })}
+          </View>
+        </Card>
       </View>
     );
 });
