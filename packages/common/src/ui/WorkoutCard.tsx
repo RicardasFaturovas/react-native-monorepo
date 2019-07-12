@@ -1,6 +1,7 @@
 import * as React from 'react'
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native'
 import { observer } from 'mobx-react-lite';
+
 import { Card } from './Card';
 
 interface Props {
@@ -59,17 +60,21 @@ export const WorkoutCard : React.FC<Props> = observer(({ exercise, repsAndWeight
         <Card>
           <View style={styles.topRow}>
             <Text style={styles.topRowText}>{exercise}</Text>
-            <Text>{repsAndWeight}</Text>
+            <Text>{repsAndWeight}kg</Text>
           </View>
           <View style={styles.bottomRow}>
             {sets.map((set, index) => {
-              const markup = set === 'x' ? (
+              const markup = set === 'x' ? 
+              (
                 <View style={_getStylesForCircle(set)} key={set + index}>
                   <Text style={[styles.whiteText, styles.circleText]}>{set}</Text>
                 </View> 
               ) : 
               ( 
-                <TouchableOpacity onPress={() => onSetPress(index)} style={_getStylesForCircle(set)} key={set + index}>
+                <TouchableOpacity 
+                  onPress={() => onSetPress(index)} 
+                  style={_getStylesForCircle(set)} key={set + index}
+                >
                   <Text style={[styles.whiteText, styles.circleText]}>{set}</Text>
                 </TouchableOpacity> 
               )

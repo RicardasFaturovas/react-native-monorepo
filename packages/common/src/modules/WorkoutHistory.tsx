@@ -1,10 +1,12 @@
 import * as React from 'react'
-import { Text, View, Button, StyleSheet, FlatList } from 'react-native';
-import { observer } from 'mobx-react-lite';
-import { RootStoreContext } from '../stores/RootStore';
+import { View, StyleSheet, FlatList } from 'react-native';
 import { RouteComponentProps } from 'react-router';
+import { observer } from 'mobx-react-lite';
+
+import { RootStoreContext } from '../stores/RootStore';
+import { ICurrentExercise } from '../stores/WorkoutStore';
 import { HistoryCard } from '../ui/HistoryCard';
-import { CurrentExercise } from '../stores/WorkoutStore';
+import { FloatingActionButton } from '../ui/FloatingActionButton';
 
 interface Props extends RouteComponentProps {}
 
@@ -15,6 +17,9 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
     padding: 10
+  },
+  container: {
+    flex: 1
   }
 });
 
@@ -24,7 +29,7 @@ export const WorkoutHistory: React.FC<Props> = observer(({history}) => {
   const rows: Array<
     Array<{
       date: string;
-      exercises: CurrentExercise[];
+      exercises: ICurrentExercise[];
     }>
   > = [];
 
@@ -39,38 +44,7 @@ export const WorkoutHistory: React.FC<Props> = observer(({history}) => {
   }
 
   return (
-    <View>
-      <Text>Workout history page</Text>
-      <Button
-        title="Create workout"
-        onPress={() =>{
-          rootStore.workoutStore.currentExercises.push({
-              exercise: "Squat",
-              setsNumber: 5,
-              reps: 5,
-              sets: ["", "", "", "", ""],
-              weight: 250
-            }, 
-            {
-              exercise: "Bench Press",
-              setsNumber: 5,
-              reps: 5,
-              sets: ["", "", "", "", ""],
-              weight: 200
-            },
-            {
-              exercise: "Deadlift",
-              setsNumber: 1,
-              reps: 5,
-              sets: ["5", "x", "x", "x", "x"],
-              weight: 350
-            }
-          );
-          
-          history.push('/current-workout')
-        }}
-       />
-
+    <View style={styles.container}>
       <FlatList
         renderItem={({ item }) => (
           <View style={styles.row}>
@@ -92,6 +66,12 @@ export const WorkoutHistory: React.FC<Props> = observer(({history}) => {
         )} 
         data={rows} 
         keyExtractor={(item) => item.reduce((previous, current) => previous + ' ' + current.date, '')} 
+      />
+
+      <FloatingActionButton 
+        onPress={() => {
+          history.push('/current-workout')
+        }}
       />
     </View>
   );

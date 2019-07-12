@@ -1,12 +1,14 @@
-import dayjs from "dayjs";
 import * as React from 'react'
 import { View, StyleSheet, Button, ScrollView } from 'react-native';
 import { RouteComponentProps } from 'react-router';
 import { observer } from 'mobx-react-lite';
+import dayjs from 'dayjs';
 
 import { WorkoutCard } from '../ui/WorkoutCard';
 import { WorkoutTimer } from '../ui/WorkoutTimer';
 import { RootStoreContext } from '../stores/RootStore';
+import { FloatingActionButton } from '../ui/FloatingActionButton';
+import { AddWorkoutCard } from '../ui/AddWorkoutCard';
 
 interface Props extends RouteComponentProps<{
   year?: string;
@@ -37,10 +39,12 @@ export const CurrentWorkouts: React.FC<Props> = observer(({
   }, [])
 
   const isCurrentWorkout = !year && !month && !day;
-  const dateKey = `${year}-${month}-${day}`
+  const dateKey = `${year}-${month}-${day}`;
+  const [addWorkoutVisible, setAddWorkoutVisible] = React.useState(false);
+
   return (
     <View style={styles.container}>
-      <ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.scrollContainer}>
+      <ScrollView keyboardShouldPersistTaps='always' contentContainerStyle={styles.scrollContainer}>
         {(isCurrentWorkout ?
           rootStore.workoutStore.currentExercises :
           rootStore.workoutStore.history[dateKey]
@@ -70,17 +74,43 @@ export const CurrentWorkouts: React.FC<Props> = observer(({
             />
           );
         })}
+        {addWorkoutVisible ? 
+          <AddWorkoutCard 
+            onAddPress={(exercise, sets, reps, weight) => {
+              const formattedSets = ['', '', '', '', ''];
+              formattedSets.fill('x', sets, 5)
+
+              rootStore.workoutStore.currentExercises.push(
+                {
+                  exercise,
+                  reps: parseInt(reps) || 0,
+                  setsNumber: sets,
+                  weight: parseInt(weight) || 0,
+                  sets: formattedSets
+                }
+              );
+              setAddWorkoutVisible(false);
+            }}
+            onCancelPress={() => setAddWorkoutVisible(false)}
+          /> : 
+          null
+        }
         <Button
           title='SAVE'
           onPress={() => {
             if (isCurrentWorkout) {
-              rootStore.workoutStore.history[dayjs().format("YYYY-MM-DD")] = rootStore.workoutStore.currentExercises;
+              rootStore.workoutStore.history[dayjs().format('YYYY-MM-DD')] = rootStore.workoutStore.currentExercises;
               rootStore.workoutStore.currentExercises = [];
             }
             history.push("/");
           }}
         />
       </ScrollView>
+      <FloatingActionButton
+        onPress={() => {
+          setAddWorkoutVisible(true);
+        }} 
+      />
       {rootStore.workoutTimerStore.isRunning ? (
         <WorkoutTimer 
           percent={rootStore.workoutTimerStore.percent}

@@ -1,10 +1,9 @@
-import { observable } from "mobx";
-import { persist } from "mobx-persist";
+import { observable, computed } from 'mobx';
+import { persist } from 'mobx-persist';
+
 import { RootStore } from "./RootStore";
 
-type WorkoutDay = 'a' | 'b';
-
-export interface CurrentExercise {
+export interface ICurrentExercise {
   weight: number;
   reps: number;
   setsNumber: number
@@ -12,7 +11,7 @@ export interface CurrentExercise {
   sets: string[];
 }
 interface IWorkoutHistory {
-  [key: string]: CurrentExercise[]
+  [key: string]: ICurrentExercise[];
 }
 
 export class WorkoutStore {
@@ -22,11 +21,13 @@ export class WorkoutStore {
   @persist @observable currentDeadLift: number;
   @persist @observable currentBarbellRow: number;
 
-  @persist @observable lastWorkoutType: WorkoutDay;
-
   @persist('object') @observable history: IWorkoutHistory = {};
 
-  @persist('list') @observable currentExercises: CurrentExercise[] = [];
+  @persist('list') @observable currentExercises: ICurrentExercise[] = [];
+
+  @computed get hasCurrentWorkout() {
+    return !!this.currentExercises.length;
+  }
 
   rootStore: RootStore
     

@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { Text } from 'react-native';
+
+import { ICurrentExercise } from '../stores/WorkoutStore';
 import { Card } from './Card';
-import { CurrentExercise } from '../stores/WorkoutStore';
 
 interface Props {
   header: string;
-  currentExercises: CurrentExercise[];
+  currentExercises: ICurrentExercise[];
   onPress: () => void;
 };
 

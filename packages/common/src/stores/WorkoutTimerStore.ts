@@ -1,6 +1,6 @@
-import { observable, action, computed } from "mobx";
-import { persist } from "mobx-persist";
-import dayjs from "dayjs";
+import { observable, action, computed } from 'mobx';
+import { persist } from 'mobx-persist';
+import dayjs from 'dayjs';
 
 const padZero = (numberToPad: number): string => {
   let paddedNumber = `${numberToPad}`;
@@ -8,7 +8,7 @@ const padZero = (numberToPad: number): string => {
     paddedNumber = `0${numberToPad}`;
   }
 
-  return paddedNumber
+  return paddedNumber;
 }
 
 export class WorkoutTimerStore {
@@ -21,7 +21,7 @@ export class WorkoutTimerStore {
 
     this.seconds = dayjs().diff(this.startTime, 'second');
 
-    setTimeout(() => this.measure(), 1000)
+    setTimeout(() => this.measure(), 1000);
   }
 
   @action startTimer() {
@@ -39,11 +39,11 @@ export class WorkoutTimerStore {
     const minutes = Math.floor(this.seconds / 60);
     const seconds = this.seconds % 60;
 
-    return `${padZero(minutes)}: ${padZero(seconds)}`
+    return `${padZero(minutes)}: ${padZero(seconds)}`;
   }
 
   
   @computed get percent() {
-    return `${Math.min(100, (this.seconds / 180) * 100)}`;
+    return `${Math.min(100, (this.seconds / 60) * 100)}`;
   }
 }

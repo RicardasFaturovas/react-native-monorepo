@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet} from 'react-native';
-import { observer } from "mobx-react-lite";
+import { observer } from 'mobx-react-lite';
+
 import { Routes } from './Routes';
 
 export const App = observer(() => {
